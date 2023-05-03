@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
       
 
       - name: Set up Node.js 18.x
-        run: actions/setup-node@v3
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
           
