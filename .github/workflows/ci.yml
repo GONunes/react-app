@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
   workflow_dispatch:
-  tete
+
 jobs:
   CI:
     runs-on: ubuntu-latest
