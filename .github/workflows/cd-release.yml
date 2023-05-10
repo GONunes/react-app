@@ -1,8 +1,8 @@
-name: CD
+name: CD-RELEASE
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "release" ]
 
   workflow_dispatch:
 
@@ -59,8 +59,8 @@ jobs:
           
       - name: Deploy de application
         run: |
-          ssh google-cloud "sudo systemctl stop react-app"
-          ssh google-cloud "sudo rm -rf /app/react-app"
+          ssh google-cloud "sudo systemctl stop sandbox-app"
+          ssh google-cloud "sudo rm -rf /sandbox/react-app"
           scp -r build google-cloud:/home/github/react-app
-          ssh google-cloud "sudo mv /home/github/react-app /app/react-app"
-          ssh google-cloud "sudo systemctl start react-app"
+          ssh google-cloud "sudo mv /home/github/react-app /sandbox/react-app"
+          ssh google-cloud "sudo systemctl start sandbox-app"
