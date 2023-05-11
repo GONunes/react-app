@@ -12,22 +12,22 @@ jobs:
 
     steps:
     
-      - name: Configure SSH Google Cloud
+      - name: Configure SSH AWS
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/google-cloud.key
-          chmod 600 ~/.ssh/google-cloud.key
+          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          chmod 600 ~/.ssh/aws-cloud.key
           cat >>~/.ssh/config <<END
-          Host google-cloud
+          Host aws-cloud
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/google-cloud.key
+            IdentityFile ~/.ssh/aws-cloud.key
             StrictHostKeyChecking no
           END
         env:
-          SSH_USER: ${{ secrets.GOOGLE_CLOUD_SSH_USER }}
-          SSH_KEY: ${{ secrets.GOOGLE_CLOUD_SSH_KEY }}
-          SSH_HOST: ${{ secrets.GOOGLE_CLOUD_SSH_HOST }}
+          SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
     
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -59,8 +59,8 @@ jobs:
           
       - name: Deploy de application
         run: |
-          ssh google-cloud "sudo systemctl stop sandbox-app"
-          ssh google-cloud "sudo rm -rf /sandbox/react-app"
-          scp -r build google-cloud:/home/github/react-app
-          ssh google-cloud "sudo mv /home/github/react-app /sandbox/react-app"
-          ssh google-cloud "sudo systemctl start sandbox-app"
+          ssh aws-cloud "sudo systemctl stop sandbox-app"
+          ssh aws-cloud "sudo rm -rf /sandbox/react-app"
+          scp -r build aws-cloud:/home/github/react-app
+          ssh aws-cloud "sudo mv /home/github/react-app /sandbox/react-app"
+          ssh aws-cloud "sudo systemctl start sandbox-app"
