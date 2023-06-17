@@ -1,6 +1,8 @@
 FROM ubuntu:latest
 WORKDIR /app
-RUN apt-get update -y && apt-get upgrade -y
+RUN apt install curl
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | -E bash -
+RUN apt-get update -y
 RUN apt-get install nodejs -y
 RUN npm install --global serve -y
 COPY . .
