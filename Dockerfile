@@ -1,9 +1,7 @@
 FROM ubuntu:latest
 WORKDIR /app
-RUN apt-get update -y && apt-get install apt-utils -y
-RUN apt install curl -y
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-RUN apt-get install nodejs -y
+RUN apt-get update -y
+RUN apt-get install nodejs -y && apt-get install npm -y
 RUN npm install --global serve -y
 COPY . .
 ENV NODE_OPTS "-p"
