@@ -12,22 +12,22 @@ jobs:
 
     steps:
     
-      - name: Configure SSH AWS
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
-          chmod 600 ~/.ssh/aws-cloud.key
-          cat >>~/.ssh/config <<END
-          Host aws-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/aws-cloud.key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.AWS_SSH_USER }}
-          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+      #- name: Configure SSH AWS
+        #run: |
+          #mkdir -p ~/.ssh/
+          #echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          #chmod 600 ~/.ssh/aws-cloud.key
+          #cat >>~/.ssh/config <<END
+          #Host aws-cloud
+            #HostName $SSH_HOST
+            #User $SSH_USER
+            #IdentityFile ~/.ssh/aws-cloud.key
+            #StrictHostKeyChecking no
+          #END
+        #env:
+          #SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          #SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          #SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
     
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -39,8 +39,8 @@ jobs:
           node-version: 18.x
           
           
-      - name: Install dependencies
-        run: npm install
+      #- name: Install dependencies
+        #run: npm install
         
         
       - name: Run the tests
@@ -54,13 +54,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           
-      - name: Build the application
-        run: npm run build
+      #- name: Build the application
+        #run: npm run build
           
-      - name: Deploy de application
+      #- name: Deploy de application
+        #run: |
+          #ssh aws-cloud "sudo systemctl stop react-app"
+          #ssh aws-cloud "sudo rm -rf /app/react-app"
+          #scp -r build aws-cloud:/home/github/react-app
+          #ssh aws-cloud "sudo mv /home/github/react-app /app/react-app"
+          #ssh aws-cloud "sudo systemctl start react-app"
+
+      - name: Deploy Docker
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          ssh aws-cloud "sudo systemctl stop react-app"
-          ssh aws-cloud "sudo rm -rf /app/react-app"
-          scp -r build aws-cloud:/home/github/react-app
-          ssh aws-cloud "sudo mv /home/github/react-app /app/react-app"
-          ssh aws-cloud "sudo systemctl start react-app"
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker build . -t gonunes/react-app:latest
+          docker push gonunes/react-app:latest
