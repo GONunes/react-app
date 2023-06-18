@@ -68,7 +68,6 @@ jobs:
           
       - name: Config Container on VM
         run: |
-          ssh aws-cloud "sudo docker stop react-app"
-          ssh aws-cloud "sudo docker system prune -f"
+          ssh aws-cloud "sudo docker compose down"
           ssh aws-cloud "sudo docker rmi gonunes/react-app"
-          ssh aws-cloud "sudo docker run -d --name react-app -p 3000:3000 --restart unless-stopped gonunes/react-app:latest"
+          ssh aws-cloud "sudo docker compose up -d"
