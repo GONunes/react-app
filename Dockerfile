@@ -1,6 +1,5 @@
 FROM centos:latest
 WORKDIR /app
-RUN yum update -y
 RUN yum install nodejs -y
 RUN npx serve -y
 COPY . .
