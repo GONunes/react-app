@@ -1,7 +1,7 @@
 FROM centos:latest
 WORKDIR /app
 RUN yum update -y
-RUN ym install nodejs -y
+RUN yum install nodejs -y
 RUN npx serve -y
 COPY . .
 ENV NODE_OPTS "-p"
