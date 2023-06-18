@@ -69,6 +69,6 @@ jobs:
       - name: Config Container on VM
         run: |
           ssh aws-cloud "sudo docker stack rm react-app"
-          ssh aws-cloud "sudo docker pull gonunes/react-app:latest"
-          ssh aws-cloud "sudo docker stack deploy -c docker-compose.yml react-app"
+          ssh aws-cloud "sudo sleep 10"
           ssh aws-cloud "sudo docker system prune -f"
+          ssh aws-cloud "sudo docker stack deploy -c docker-compose.yml react-app"
