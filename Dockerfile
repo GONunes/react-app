@@ -1,8 +1,7 @@
 FROM ubuntu:latest
 WORKDIR /app
-RUN apt-get update -y && apt install snapd -y
-RUN systemctl start snapd.service
-RUN snap install node --classic --channel=18
+RUN apt-get update -y
+RUN apt-get install nodejs -y && apt-get install npm -y
 COPY . .
-ENV NODE_OPTS "-p"
-ENTRYPOINT npx serve ./build $NODE_OPTS 5000
+ENV NODE_OPTS ""
+ENTRYPOINT npm start ./build $NODE_OPTS
