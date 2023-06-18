@@ -12,22 +12,22 @@ jobs:
 
     steps:
     
-      #- name: Configure SSH AWS
-        #run: |
-          #mkdir -p ~/.ssh/
-          #echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
-          #chmod 600 ~/.ssh/aws-cloud.key
-          #cat >>~/.ssh/config <<END
-          #Host aws-cloud
-            #HostName $SSH_HOST
-            #User $SSH_USER
-            #IdentityFile ~/.ssh/aws-cloud.key
-            #StrictHostKeyChecking no
-          #END
-        #env:
-          #SSH_USER: ${{ secrets.AWS_SSH_USER }}
-          #SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-          #SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+      - name: Configure SSH AWS
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          chmod 600 ~/.ssh/aws-cloud.key
+          cat >>~/.ssh/config <<END
+          Host aws-cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/aws-cloud.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
     
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -56,14 +56,6 @@ jobs:
           
       - name: Build the application
         run: npm run build
-          
-      #- name: Deploy de application
-        #run: |
-          #ssh aws-cloud "sudo systemctl stop react-app"
-          #ssh aws-cloud "sudo rm -rf /app/react-app"
-          #scp -r build aws-cloud:/home/github/react-app
-          #ssh aws-cloud "sudo mv /home/github/react-app /app/react-app"
-          #ssh aws-cloud "sudo systemctl start react-app"
 
       - name: Deploy Docker
         env:
@@ -73,3 +65,10 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker build . -t gonunes/react-app:latest
           docker push gonunes/react-app:latest
+          
+      - name: Config Container on VM
+        run: |
+          ssh aws-cloud "sudo docker stop react-app"
+          ssh aws-cloud "sudo docker system prune -f"
+          ssh aws-cloud "sudo docker rmi gonunes/react-app"
+          ssh aws-cloud "sudo docker run -d --name react-app -p 3000:3000 --restart unless-stopped gonunes/react-app:latest"
