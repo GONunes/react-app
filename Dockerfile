@@ -1,7 +1,6 @@
 FROM ubuntu:latest
 WORKDIR /app
-RUN apt-get update -y
-RUN apt-get install wget -y
+RUN apt-get update -y && apt-get upgrade -y
 RUN wget https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | source ~/.bashrc
 RUN nvm install v18 && nvm install node
 RUN npm install --global serve -y
