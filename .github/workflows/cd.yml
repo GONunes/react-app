@@ -12,22 +12,22 @@ jobs:
 
     steps:
     
-      - name: Configure SSH AWS
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
-          chmod 600 ~/.ssh/aws-cloud.key
-          cat >>~/.ssh/config <<END
-          Host aws-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/aws-cloud.key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.AWS_SSH_USER }}
-          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+      #- name: Configure SSH AWS
+        #run: |
+          #mkdir -p ~/.ssh/
+          #echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          #chmod 600 ~/.ssh/aws-cloud.key
+          #cat >>~/.ssh/config <<END
+          #Host aws-cloud
+            #HostName $SSH_HOST
+            #User $SSH_USER
+            #IdentityFile ~/.ssh/aws-cloud.key
+            #StrictHostKeyChecking no
+          #END
+        #env:
+          #SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          #SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          #SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
     
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -66,9 +66,9 @@ jobs:
           docker build . -t gonunes/react-app:latest
           docker push gonunes/react-app:latest
           
-      - name: Config Container on VM
-        run: |
-          ssh aws-cloud "sudo docker stack rm react-app"
-          ssh aws-cloud "sudo sleep 15"
-          ssh aws-cloud "sudo docker stack deploy -c docker-compose.yml react-app"
-          ssh aws-cloud "sudo docker system prune -f"
+      #- name: Config Container on VM
+        #run: |
+          #ssh aws-cloud "sudo docker stack rm react-app"
+          #ssh aws-cloud "sudo sleep 15"
+          #ssh aws-cloud "sudo docker stack deploy -c docker-compose.yml react-app"
+          #ssh aws-cloud "sudo docker system prune -f"
