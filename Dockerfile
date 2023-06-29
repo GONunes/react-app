@@ -1,5 +1,4 @@
-FROM node:18
+FROM nginx:latest
 WORKDIR /app
-COPY build ./react-app
-ENV NODE_OPTS "-p"
-ENTRYPOINT npx serve ./react-app $NODE_OPTS 5000
+COPY build /var/www/html
+EXPOSE 80
